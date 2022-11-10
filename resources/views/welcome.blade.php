@@ -18,7 +18,7 @@
             font-weight: 200;
             height: 100vh;
             margin: 0;
-            background-image: url("https://images.unsplash.com/photo-1468779036391-52341f60b55d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1521&q=80");
+            background-image: url("abbaaaa.png");
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -30,7 +30,7 @@
         .flex-center {
             align-items: center;
             display: flex;
-            justify-content: center;
+            justify-content: left;
         }
 
         .position-ref {
@@ -45,10 +45,13 @@
 
         .content {
             text-align: center;
+            margin-left: 60px;
         }
 
         .title {
             font-size: 84px;
+            font-weight: 600;
+            color: rgb(253, 207, 14);
         }
 
         .links > a {
@@ -62,7 +65,11 @@
             border: 1px solid #636b6f;
             border-radius: 10px;
         }
+        .quote{
+            color: white;
+            
 
+        }
         .m-b-md {
             margin-bottom: 30px;
         }
@@ -86,8 +93,8 @@
         </div>
 
         <div class="links">
-            <blockquote>
-                {{$quotes}}
+            <blockquote class="quote">
+            Knowledge is the only treasure that increases on sharing!!
             </blockquote>
         </div>
     </div>

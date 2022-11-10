@@ -32,13 +32,27 @@
             box-shadow: 0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05) !important;
             border-radius: 3px;
         }
+        .login-page{
+            background-image: url("abbaaaa.png");
+            
+        }
+        .login-box{
+           position: absolute;
+           margin-left: 200px;
+        }
+        .title {
+            font-family: 'Nunito', sans-serif !important;
+            font-size: 56px;
+            font-weight: 600;
+            color: rgb(253, 207, 14) !important;
+        }
     </style>
 
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ route('home') }}"><b>{{config('settings.system_title')}} </b></a>
+        <a class= "title" href="{{ route('home') }}"><b>{{config('settings.system_title')}} </b></a>
     </div>
 
     <!-- /.login-logo -->

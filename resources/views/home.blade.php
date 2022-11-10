@@ -77,6 +77,7 @@
                     </div>
                 </div>
             </div>
+            @if(auth()->user()->is_super_admin)
             <div class="col-md-4">
                 <div class="info-box bg-yellow">
                     <span class="info-box-icon"><i class="fa fa-tags"></i></span>
@@ -103,7 +104,9 @@
                     <!-- /.info-box-content -->
                 </div>
             </div>
+            @endif
         </div>
+        @if(auth()->user()->is_super_admin)
         <div class="row">
             <div class="col-sm-12">
                 <div class="box box-default">
@@ -158,5 +161,6 @@
                 </div>
             </div>
         </div>
+        @endif
     </section>
 @endsection
