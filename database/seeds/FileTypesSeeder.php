@@ -15,7 +15,7 @@ class FileTypesSeeder extends Seeder
             'name' => 'General',
             'no_of_files' => 2,
             'labels' => 'page1,page2',
-            'file_validations' => 'mimes:jpeg,bmp,png,jpg',
+            'file_validations' => 'mimes:jpeg,png,jpg,pdf,ppt,docx,odt,csv,xls,xlsx,txt',
             'file_maxsize' => 8
         ]);
     }
