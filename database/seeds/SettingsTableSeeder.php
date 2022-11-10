@@ -11,7 +11,7 @@ class SettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Setting::create(['name'=>'system_title','value'=>'Digi Docu']);
+        \App\Setting::create(['name'=>'system_title','value'=>'ABa KSP']);
         \App\Setting::create(['name'=>'system_logo','value'=>'logo.png']);
 
         \App\Setting::create(['name'=>'tags_label_singular','value'=>'tag']);
@@ -23,7 +23,7 @@ class SettingsTableSeeder extends Seeder
         \App\Setting::create(['name'=>'file_label_singular','value'=>'file']);
         \App\Setting::create(['name'=>'file_label_plural','value'=>'files']);
 
-        \App\Setting::create(['name'=>'default_file_validations','value'=>'mimes:jpeg,bmp,png,jpg']);
+        \App\Setting::create(['name'=>'default_file_validations','value'=>'mimes:jpeg,png,jpg,pdf,ppt,docx,odt,csv,xls,xlsx,txt']);
         \App\Setting::create(['name'=>'default_file_maxsize','value'=>'8']);
 
         \App\Setting::create(['name'=>'image_files_resize','value'=>'300,500,700']);
