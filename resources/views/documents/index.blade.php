@@ -119,10 +119,13 @@
                         @cannot('view',$document)
                             @continue
                         @endcannot
+                        @if(!(auth()->user()->is_super_admin) && !($document->isVerified) && auth()->user()->cannot('verify', $document)  )
+                        @continue
+                        @endif
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 m-t-20" style="cursor:pointer;">
                             <div class="doc-box box box-widget widget-user-2">
                                 <div class="widget-user-header bg-gray bg-folder-shaper no-padding">
-                                    <div class="folder-shape-top bg-gray"></div>
+                                    <div class="folder-shape-top bg-gray"></div> 
                                     <div class="box-header">
                                         <a href="{{route('documents.show',$document->id)}}" style="color: black;">
                                             <h3 class="box-title"><i class="fa fa-folder text-yellow"></i></h3>
@@ -162,9 +165,17 @@
                                     <!-- /.widget-user-image -->
                                     <a href="{{route('documents.show',$document->id)}}" style="color: black;">
                                     <span style="max-lines: 1; white-space: nowrap;margin-left: 3px;">
-                                    @foreach ($document->tags as $tag)
+                                    <?php 
+                                    $tags = sliceTag($document->tags);
+                                    if(count($tags) <= 1) {
+                                        $sliceLen = 25;
+                                    } else {
+                                        $sliceLen = 10;
+                                    }
+                                    ?>
+                                    @foreach ($tags as $tag)
                                             <small class="label"
-                                                   style="background-color: {{$tag->color}};font-size: 0.93rem;">{{$tag->name}}</small>
+                                                   style="background-color: {{$tag->color}};font-size: 0.93rem;">{{trimText($tag->name, $sliceLen)}}</small>
                                         @endforeach
                                     </span>
                                         <h5 class="widget-user-username" title="{{$document->name}}"

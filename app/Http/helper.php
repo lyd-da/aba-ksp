@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 /**
  * Format The Date
@@ -71,6 +72,16 @@ function isImage($mimeType)
 {
     return Str::startsWith($mimeType, "image/");
 }
+function trimText($text, $len)
+{
+    $text = Str::limit($text,$len);
+    return $text;
+}
+function sliceTag($tags)
+{
+    $spliced = $tags->splice(0, 2);
+    return $spliced;
+}
 
 /**
  * Check if file is
@@ -109,8 +120,13 @@ function groupTagsPermissions($permissions)
 
     $tagsWise = [];
     for ($i = 0; $i < $permissions->count(); $i++) {
-        preg_match_all('/([\D]+) documents in tag ([\d]+)/m',
-            $permissions[$i]->name, $matches, PREG_SET_ORDER, 0);
+        preg_match_all(
+            '/([\D]+) documents in tag ([\d]+)/m',
+            $permissions[$i]->name,
+            $matches,
+            PREG_SET_ORDER,
+            0
+        );
         if (!empty($matches)) {
             if (isset($tagsWise[$matches[0][2]])) {
                 $tagsWise[$matches[0][2]]['permissions'][] = $matches[0][1];
@@ -136,8 +152,13 @@ function groupDocumentsPermissions($permissions)
 
     $docWise = [];
     for ($i = 0; $i < $permissions->count(); $i++) {
-        preg_match_all('/([\D]+) document ([\d]+)/m',
-            $permissions[$i]->name, $matches, PREG_SET_ORDER, 0);
+        preg_match_all(
+            '/([\D]+) document ([\d]+)/m',
+            $permissions[$i]->name,
+            $matches,
+            PREG_SET_ORDER,
+            0
+        );
         if (!empty($matches)) {
             if (isset($docWise[$matches[0][2]])) {
                 $docWise[$matches[0][2]]['permissions'][] = $matches[0][1];

@@ -195,7 +195,7 @@
                             <p>
                                 @foreach ($document->tags as $tag)
                                     <small class="label"
-                                           style="background-color: {{$tag->color}};">{{$tag->name}}</small>
+                                           style="background-color: {{$tag->color}};">{{trimText($tag->name,20)}}</small>
                                 @endforeach
                             </p>
                         </div>

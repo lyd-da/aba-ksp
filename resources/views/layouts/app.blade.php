@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{asset('vendor/bootstrap-wysihtml5/css/bootstrap3-wysihtml5.min.css')}}">
     <link rel="stylesheet" href="{{asset('vendor/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}">
     <link rel="stylesheet" href="{{asset('css/digidocu-custom.css')}}">
+    <link rel="shortcut icon" href="{{ asset('aba_blue_logo.png') }}">
+
     @yield('css')
 </head>
 
@@ -31,7 +33,7 @@
             </a>
 
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top" role="navigation">
+            <nav class="navbar navbar-static-top" role="navigation" style="background-color: ;">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
