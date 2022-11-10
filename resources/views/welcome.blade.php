@@ -18,7 +18,7 @@
             font-weight: 200;
             height: 100vh;
             margin: 0;
-            background-image: url("abbaaaa.png");
+            background-image: url("aba_ksp_banner.png");
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -49,9 +49,9 @@
         }
 
         .title {
-            font-size: 84px;
-            font-weight: 600;
-            color: rgb(253, 207, 14);
+            font-size: 64px;
+            font-weight: 800;
+            color: rgb(255, 255, 255);
         }
 
         .links > a {
@@ -73,6 +73,9 @@
         .m-b-md {
             margin-bottom: 30px;
         }
+        .logo{
+           background-image: url("aba_logo.png");
+        }
     </style>
 </head>
 <body>
@@ -86,7 +89,8 @@
             @endauth
         </div>
     @endif
-
+<div class = "logo">
+</div>
     <div class="content">
         <div class="title m-b-md">
             {{config('settings.system_title')}}

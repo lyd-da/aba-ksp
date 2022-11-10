@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{asset('css/lte/skins/skin-blue-light.min.css')}}">
     <!-- iCheck -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/square/_all.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -33,18 +34,29 @@
             border-radius: 3px;
         }
         .login-page{
-            background-image: url("abbaaaa.png");
+            background-image: url("aba_ksp_banner.png");
+            
+        }
+        .login-logo{
+            margin-bottom: 50px;
+            padding-top: 50px;
             
         }
         .login-box{
            position: absolute;
-           margin-left: 200px;
+           margin-left: 400px;
         }
         .title {
-            font-family: 'Nunito', sans-serif !important;
-            font-size: 56px;
-            font-weight: 600;
-            color: rgb(253, 207, 14) !important;
+            font-family: 'Nunito' !important;
+            font-size: 40px !important;
+            font-weight: 900 !important;
+            color: rgb(255, 255, 255) !important;
+            text-align: center;
+            
+        }
+        .title2 {
+            font-family: 'Nunito' !important;
+            
         }
     </style>
 
@@ -52,7 +64,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a class= "title" href="{{ route('home') }}"><b>{{config('settings.system_title')}} </b></a>
+        <a class= "title title2" style="font-family: Arial" href="{{ route('home') }}">{{config('settings.system_title')}} </a>
     </div>
 
     <!-- /.login-logo -->
