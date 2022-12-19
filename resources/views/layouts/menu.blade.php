@@ -1,3 +1,9 @@
+@can('viewAny',\App\Document::class)
+    <li class="{{ Request::is('admin/documents*') ? 'active' : '' }}">
+        <a href="{!! route('documents.index') !!}"><i
+                class="fa fa-file"></i><span>{{ucfirst(config('settings.document_label_plural'))}}</span></a>
+    </li>
+@endcan
 <li class="{{ Request::is('admin/home*') ? 'active' : '' }}">
     <a href="{!! route('admin.dashboard') !!}"><i class="fa fa-home"></i><span>Home</span></a>
 </li>
@@ -10,12 +16,6 @@
     <li class="{{ Request::is('admin/tags*') ? 'active' : '' }}">
         <a href="{!! route('tags.index') !!}"><i
                 class="fa fa-tags"></i><span>{{ucfirst(config('settings.tags_label_plural'))}}</span></a>
-    </li>
-@endcan
-@can('viewAny',\App\Document::class)
-    <li class="{{ Request::is('admin/documents*') ? 'active' : '' }}">
-        <a href="{!! route('documents.index') !!}"><i
-                class="fa fa-file"></i><span>{{ucfirst(config('settings.document_label_plural'))}}</span></a>
     </li>
 @endcan
 @if(auth()->user()->is_super_admin)

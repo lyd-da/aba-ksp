@@ -275,11 +275,11 @@
                                     <div class="col-xs-6 col-md-6 col-lg-4">
                                         <div class="box custom-box">
                                             <div class="box-body">
-                                                @if (checkIsFileIsImage($file->file))
+                                                <!-- @if (checkIsFileIsImage($file->file)) -->
                                                     <span class="img-d-select">
                                                     <input type="checkbox" value="{{$file->file}}" name="topdf_check[]" class="iCheck-helper"/>
                                                 </span>
-                                                @endif
+                                                <!-- @endif -->
                                                 <img onclick="showFileModal({{json_encode($file)}})"
                                                      style="cursor:pointer;"
                                                      src="{{buildPreviewUrl($file->file)}}"
@@ -288,6 +288,7 @@
                                             <div class="box-header">
                                                 <div class="user-block">
                                                     <span class="label label-default">{{$file->fileType->name}}</span>
+                                                    <span class="label label-default">{{$document->status}}</span>
                                                     <span class="username" style="cursor:pointer;"
                                                           onclick="showFileModal({{json_encode($file)}})">{{$file->name}}</span>
                                                     <small class="description text-gray"><b

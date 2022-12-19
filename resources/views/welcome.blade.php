@@ -83,7 +83,8 @@
     @if (Route::has('login'))
         <div class="top-right links">
             @auth
-                <a href="{{ route('admin.dashboard') }}">Home</a>
+                <!-- <a href="{{ route('admin.dashboard') }}">Home</a> -->
+                <a href="{!! route('documents.index') !!}">Home</a>
             @else
                 <a href="{{ route('login') }}">Login</a>
             @endauth

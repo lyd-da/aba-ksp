@@ -56,7 +56,8 @@ class File extends Model
         'document_id',
         'file_type_id',
         'created_by',
-        'custom_fields'
+        'custom_fields',
+        'status'
     ];
 
     /**
@@ -71,7 +72,8 @@ class File extends Model
         'document_id' => 'integer',
         'file_type_id' => 'integer',
         'created_by' => 'integer',
-        'custom_fields' => 'array'
+        'custom_fields' => 'array',
+        'status' => 'string'
     ];
 
     /**
