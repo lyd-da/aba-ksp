@@ -212,38 +212,107 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h2 class="modal-title" style="color:#0071a1;">@{{name}}</h2>
                     </div>
-                    <div class="modal-body">
-                        <div class="col-md-3">
-                            
-                            <div class="form-group">
-                                <label>{{ucfirst(config('settings.file_label_singular'))." Type"}}</label>
-                                <p>@{{file_type.name}}</p>
-                            </div>
-                            <div class="form-group">
-                                <label>Uploaded By:</label>
-                                <p>
-                                    @{{created_by.name}}
-                                </p>
-                            </div>
-                            <div class="form-group">
-                                <label>Uploaded On:</label>
-                                <p>@{{formatDate created_at}}</p>
-                            </div>
-                            @{{#each custom_fields}}
-                            <div class="form-group">
-                                <label>@{{titleize @key}}</label>
-                                <p>@{{this}}</p>
-                            </div>
-                            @{{/each}}
+                    <div class="row">
+                        <div class="leftcolumn">
+                           <div class="card">
+                              <h2 style="color:#0071a1;">Title</h2>
+                              <p style="color:#e91e63;">Published at : </p>
+                              <p>Description</p>
+                              <hr>
+                              <!-- Display review section start -->
+                              <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
+                                 <div>
+                                    <div class="row mt-5">
+                                       <h4>Comment Section :</h4>
+                                       <div class="col-sm-12 mt-5">
+                                          {{-- @foreach($post_detail->ReviewData as $review)
+                                          <div class=" review-content">
+                                             <img src="https://www.w3schools.com/howto/img_avatar.png" class="avatar ">
+                                             <span class="font-weight-bold ml-2">{{$review->name}}</span>
+                                             <p class="mt-1">
+                                                @for($i=1; $i<=$review->star_rating; $i++) 
+                                                <span><i class="fa fa-star text-warning"></i></span>
+                                                @endfor
+                                                <span class="font ml-2">{{$review->email}}</span>
+                                             </p>
+                                             <p class="description ">
+                                                {{$review->comments}}
+                                             </p>
+                                          </div>
+                                          <hr>
+                                          @endforeach --}}
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- Review store Section -->
+                              <div class="container">
+                                 <div class="row">
+                                    <div class="col-sm-10 mt-4 ">
+                                       <form class="py-2 px-4" action="" style="box-shadow: 0 0 10px 0 #ddd;" method="POST" autocomplete="off">
+                                          @csrf
+                                          <input type="hidden" name="post_id" value="">
+                                          <div class="row justify-content-end mb-1">
+                                             <div class="col-sm-8 float-right">
+                                                @if(Session::has('flash_msg_success'))
+                                                <div class="alert alert-success alert-dismissible p-2">
+                                                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                   <strong>Success!</strong> {!! session('flash_msg_success')!!}.
+                                                </div>
+                                                @endif
+                                             </div>
+                                          </div>
+                                          <p class="font-weight-bold ">Review</p>
+                                          <div class="form-group row">
+                                             <div class=" col-sm-6">
+                                                <input class="form-control" type="text" name="name" placeholder="Name" maxlength="40" required/>
+                                             </div>
+                                             <div class="col-sm-6">
+                                                <input class="form-control" type="email" name="email" placeholder="Email" maxlength="80" required/>
+                                             </div>
+                                          </div>
+                                          <div class="form-group row">
+                                             <div class="col-sm-6">
+                                                <input class="form-control" type="text" name="phone" placeholder="Phone" maxlength="40" required/>
+                                             </div>
+                                             <div class="col-sm-6">
+                                                <div class="rate">
+                                                   <input type="radio" id="star5" class="rate" name="rating" value="5"/>
+                                                   <label for="star5" title="text">5 stars</label>
+                                                   <input type="radio" checked id="star4" class="rate" name="rating" value="4"/>
+                                                   <label for="star4" title="text">4 stars</label>
+                                                   <input type="radio" id="star3" class="rate" name="rating" value="3"/>
+                                                   <label for="star3" title="text">3 stars</label>
+                                                   <input type="radio" id="star2" class="rate" name="rating" value="2">
+                                                   <label for="star2" title="text">2 stars</label>
+                                                   <input type="radio" id="star1" class="rate" name="rating" value="1"/>
+                                                   <label for="star1" title="text">1 star</label>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <div class="form-group row mt-4">
+                                             <div class="col-sm-12 ">
+                                                <textarea class="form-control" name="comment" rows="6 " placeholder="Comment" maxlength="200"></textarea>
+                                             </div>
+                                          </div>
+                                          <div class="mt-3 ">
+                                             <button class="btn btn-sm py-2 px-3 btn-info">Submit
+                                             </button>
+                                          </div>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                        <div class="col-md-9">
-                            <div class="file-modal-preview">
-                                <object class="obj-file-box" classid=""
-                                        data="{{\Illuminate\Support\Str::finish(route('files.showfile',['dir'=>'original']),"/")}}@{{file}}">
-                                </object>
-                            </div>
+                        <div class="rightcolumn">
+                           <div class="card">
+                              <h2>About Me</h2>
+                              <img class="fakeimg" style="height:100px;" src="https://8bityard.com/ezoimgfmt/mllibnjakigh.i.optimole.com/e4PqOHU-NUmggukx/w:110/h:48/q:auto/https://8bityard.com/wp-content/uploads/2020/05/cropped-cropped-LogoMakr_48yknb-2.png?ezimgfmt=rs:110x48/rscb1/ng:webp/ngcb1">
+                              <p>Laravel | WordPress | JQuery.</p>
+                           </div>
                         </div>
-                    </div>
+                     </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>
