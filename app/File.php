@@ -99,4 +99,12 @@ class File extends Model
     {
         return $this->belongsTo(\App\User::class, 'created_by', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    // public function review()
+    // {
+    //     return $this->hasOne(\App\Review::class, '', 'id');
+    // }
 }

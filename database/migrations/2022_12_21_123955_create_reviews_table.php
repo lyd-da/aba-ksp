@@ -31,7 +31,6 @@ class CreateReviewsTable extends Migration
             ->onDelete('cascade');
             $table->foreign('reviewed_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');
-
         });
     }
 

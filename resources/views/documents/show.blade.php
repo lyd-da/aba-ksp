@@ -42,10 +42,112 @@
             bottom: -4px;
             right: 10px;
         }
+
+
+
+
+
+        /* * {
+         box-sizing: border-box;
+         } */
+         /* Add a gray background color with some padding */
+         /* body {
+         font-family: Arial;
+         padding: 20px;
+         background: #f1f1f1;
+         } */
+         /* Header/Blog Title */
+         .header {
+         padding: 30px;
+         font-size: 40px;
+         text-align: center;
+         background: white;
+         }
+         /* Create two unequal columns that floats next to each other */
+         /* Left column */
+         .leftcolumn {   
+         float: left;
+         width: 75%;
+         }
+         /* Right column */
+         .rightcolumn {
+         float: left;
+         width: 25%;
+         padding-left: 20px;
+         }
+         /* Fake image */
+         .fakeimg {
+         background-color: #aaa;
+         width: 100%;
+         padding: 20px;
+         }
+         /* Add a card effect for articles */
+         .card {
+         background-color: white;
+         padding: 20px;
+         margin-top: 20px;
+         }
+         /* Clear floats after the columns */
+         .row:after {
+         content: "";
+         display: table;
+         clear: both;
+         }
+         .avatar {
+         vertical-align: middle;
+         width: 50px;
+         height: 50px;
+         border-radius: 50%;
+         }
+        .rate {
+         float: left;
+         height: 46px;
+         padding: 0 10px;
+         }
+         .rate:not(:checked) > input {
+         position:absolute;
+         display: none;
+         }
+         .rate:not(:checked) > label {
+         float:right;
+         width:1em;
+         overflow:hidden;
+         white-space:nowrap;
+         cursor:pointer;
+         font-size:30px;
+         color:#ccc;
+         }
+         .rate:not(:checked) > label:before {
+         content: '★ ';
+         }
+         .rate > input:checked ~ label {
+         color: #ffc700;
+         }
+         .rate:not(:checked) > label:hover,
+         .rate:not(:checked) > label:hover ~ label {
+         color: #deb217;
+         }
+         .rate > input:checked + label:hover,
+         .rate > input:checked + label:hover ~ label,
+         .rate > input:checked ~ label:hover,
+         .rate > input:checked ~ label:hover ~ label,
+         .rate > label:hover ~ input:checked ~ label {
+         color: #c59b08;
+         }
+         .rating-container .form-control:hover, .rating-container .form-control:focus{
+         background: #fff;
+         border: 1px solid #ced4da;
+         }
+         .rating-container textarea:focus, .rating-container input:focus {
+         color: #000;
+         }
     </style>
 @stop
 @section('scripts')
     <script src="https://cdn.scaleflex.it/plugins/filerobot-image-editor/3/filerobot-image-editor.min.js"></script>
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+{{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
     <script id="file-modal-template" type="text/x-handlebars-template">
         <div id="fileModal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -102,6 +204,58 @@
             </div>
         </div>
     </script>
+    <script id="file-rate-modal-template" type="text/x-handlebars-template">
+        <div id="fileRateModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title" style="color:#0071a1;">@{{name}}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-3">
+                            
+                            <div class="form-group">
+                                <label>{{ucfirst(config('settings.file_label_singular'))." Type"}}</label>
+                                <p>@{{file_type.name}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Uploaded By:</label>
+                                <p>
+                                    @{{created_by.name}}
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label>Uploaded On:</label>
+                                <p>@{{formatDate created_at}}</p>
+                            </div>
+                            @{{#each custom_fields}}
+                            <div class="form-group">
+                                <label>@{{titleize @key}}</label>
+                                <p>@{{this}}</p>
+                            </div>
+                            @{{/each}}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="file-modal-preview">
+                                <object class="obj-file-box" classid=""
+                                        data="{{\Illuminate\Support\Str::finish(route('files.showfile',['dir'=>'original']),"/")}}@{{file}}">
+                                </object>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>
+                            Close
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </script>
+    
     <script>
         const ImageEditor = new FilerobotImageEditor();
 
@@ -110,6 +264,14 @@
             var html = template(data);
             $("#modal-space").html(html);
             $("#fileModal").modal('show');
+
+        }
+
+        function showFileRateModal(data) {
+            var template = Handlebars.compile($("#file-rate-modal-template").html());
+            var html = template(data);
+            $("#modal-space").html(html);
+            $("#fileRateModal").modal('show');
 
         }
 
@@ -308,11 +470,14 @@
                                                         <li><a href="javascript:void(0);"
                                                                onclick="showFileModal({{json_encode($file)}})">Show
                                                                 Detail</a></li>
+                                                        <li><a href="javascript:void(0);"
+                                                                    onclick="showFileRateModal({{json_encode($file)}})">Rate ✩</a></li>
                                                         <li>
                                                             <a href="{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}?force=true"
                                                                download>Download
                                                                 original</a>
                                                         </li>
+                                                        
                                                         @if (checkIsFileIsImage($file->file))
                                                             @foreach (explode(",",config('settings.image_files_resize')) as $varient)
                                                                 <li>

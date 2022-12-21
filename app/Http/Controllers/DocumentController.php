@@ -306,6 +306,7 @@ class DocumentController extends Controller
             $filesData[$i]['custom_fields'] = json_encode($filesData[$i]['custom_fields'] ?? []);
             $filesData[$i]['file'] = $file->hashName();
             $filesData[$i]['created_by'] = Auth::id();
+            $filesData[$i]['status'] = config('constants.STATUS.PENDING');
             $filesData[$i]['created_at'] = now();
             $filesData[$i]['updated_at'] = now();
         }
