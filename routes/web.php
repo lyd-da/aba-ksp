@@ -36,7 +36,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','check_block']], func
     Route::resource('tags', 'TagController');
 
     Route::resource('documents', 'DocumentController');
+    Route::get('/list-file', 'FileController@index')->name('files.index');
     Route::post('document-verify/{id}','DocumentController@verify')->name('documents.verify');
+    Route::post('file-verify/{id}','DocumentController@verifyFile')->name('file.verify');
+    Route::post('file-verify','DocumentController@verifyAllFile')->name('files.verify');
     Route::post('document-store-permission/{id}','DocumentController@storePermission')->name('documents.store-permission');
     Route::post('document-delete-permission/{document_id}/{user_id}','DocumentController@deletePermission')->name('documents.delete-permission');
     Route::group(['prefix' => '/files-upload', 'as' => 'documents.files.'], function () {

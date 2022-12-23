@@ -2,12 +2,15 @@
 
 namespace App\DataTables;
 
-use App\Tag;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Services\DataTable;
+use App\File;
+use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Html\Editor\Editor;
+use Yajra\DataTables\Html\Editor\Fields;
+use Yajra\DataTables\Services\DataTable;
 
-class TagDataTable extends DataTable
+class FileDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,29 +21,20 @@ class TagDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
-        $dataTable = $dataTable->addColumn('action', 'tags.datatables_actions', 'checkbox')
-            ->addColumn('created_by', function (Tag $tag) {
-                return $tag->createdBy->name;
-            })->editColumn('color', function (Tag $tag) {
-                return '<span class="label" style="background-color: ' . $tag->color . '">' . $tag->color . '</span>';
-            })->rawColumns(['color'], true)
-            ->filterColumn('created_by', function ($query, $keyword) {
-                return $query->whereRaw("select count(*) from users where lower(users.name) like ? and users.id=tags.created_by", ["%$keyword%"]);
-            });
 
-        return $dataTable;
+        return $dataTable->addColumn('action', 'files.datatables_actions');
+    
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Tag $model
+     * @param \App\App\File $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Tag $model)
+    public function query(File $model)
     {
-        $query = $model->newQuery()->with(['createdBy']);
-        return $query;
+        return $model->newQuery();
     }
 
     /**
@@ -51,10 +45,7 @@ class TagDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->addCheckbox(['id'])
             ->columns($this->getColumns())
-            ->addColumn(['data' => 'created_by'])
-            ->select()
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
@@ -78,10 +69,12 @@ class TagDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::checkbox('id'),
-            'id',
+           'id',
             'name',
-            'color',
+            'status',
+            'created_at',
+            'updated_at',
+            
         ];
     }
 
@@ -92,6 +85,6 @@ class TagDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'tagsdatatable_' . time();
+        return 'filesdatatable_' . time();
     }
 }

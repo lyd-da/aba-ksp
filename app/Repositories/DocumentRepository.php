@@ -168,8 +168,8 @@ class DocumentRepository extends BaseRepository
     public function saveFilesWithDoc($filesData,$document)
     {
         $document->updated_at = now();
-        $document->status = config('constants.STATUS.PENDING');
-        $filesData->status = config('constants.STATUS.PENDING');
+        // $document->status = config('constants.STATUS.PENDING');
+        // $filesData->status = config('constants.STATUS.PENDING');
         $document->save();
         foreach ($filesData as $key=>$filesDatum) {
             $filesData[$key]['document_id'] = $document->id;

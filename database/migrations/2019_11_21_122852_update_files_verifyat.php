@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateFilesTable extends Migration
+class UpdateFilesVerifyat extends Migration
 {
 
     /**
@@ -14,7 +14,7 @@ class UpdateFilesTable extends Migration
     public function up()
     {
         Schema::table('files', function (Blueprint $table) {
-            $table->string('status');
+            $table->dateTime('verified_at')->nullable();
         });
     }
 
@@ -28,5 +28,3 @@ class UpdateFilesTable extends Migration
         Schema::drop('files');
     }
 }
-$table->integer('verified_by');
-$table->foreign('verified_by')->references('id')->on('users');

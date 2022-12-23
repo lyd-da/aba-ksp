@@ -57,7 +57,9 @@ class File extends Model
         'file_type_id',
         'created_by',
         'custom_fields',
-        'status'
+        'status',
+        'verified_by',
+        'verified_at',
     ];
 
     /**
@@ -73,7 +75,9 @@ class File extends Model
         'file_type_id' => 'integer',
         'created_by' => 'integer',
         'custom_fields' => 'array',
-        'status' => 'string'
+        'status' => 'string',
+        'verified_by' => 'integer',
+
     ];
 
     /**
@@ -98,5 +102,12 @@ class File extends Model
     public function createdBy()
     {
         return $this->belongsTo(\App\User::class, 'created_by', 'id');
+    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function verifiedBy()
+    {
+        return $this->belongsTo(\App\User::class, 'verified_by', 'id');
     }
 }

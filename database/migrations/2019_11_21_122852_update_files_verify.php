@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateFilesTable extends Migration
+class UpdateFilesVerify extends Migration
 {
 
     /**
@@ -14,7 +14,8 @@ class UpdateFilesTable extends Migration
     public function up()
     {
         Schema::table('files', function (Blueprint $table) {
-            $table->string('status');
+            $table->unsignedBigInteger('verified_by')->nullable();
+            $table->foreign('verified_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,5 +29,3 @@ class UpdateFilesTable extends Migration
         Schema::drop('files');
     }
 }
-$table->integer('verified_by');
-$table->foreign('verified_by')->references('id')->on('users');

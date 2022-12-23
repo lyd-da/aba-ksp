@@ -67,6 +67,10 @@
                                 <p>@{{file_type.name}}</p>
                             </div>
                             <div class="form-group">
+                                <label>Status:</label>
+                                <p>@{{status}}</p>
+                            </div>
+                            <div class="form-group">
                                 <label>Uploaded By:</label>
                                 <p>
                                     @{{created_by.name}}
@@ -75,6 +79,14 @@
                             <div class="form-group">
                                 <label>Uploaded On:</label>
                                 <p>@{{formatDate created_at}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Verified By:</label>
+                                <p>@{{verified_by}}</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Verified At:</label>
+                                <p>@{{formatDate verified_at}}</p>
                             </div>
                             @{{#each custom_fields}}
                             <div class="form-group">
@@ -210,7 +222,7 @@
                             <p>{!! $document->description !!}</p>
                         </div>
                         <div class="form-group">
-                            <label>Status:</label>
+                            <label>Directory Status:</label>
                             @if ($document->status==config('constants.STATUS.PENDING'))
                                 <span class="label label-warning">{{$document->status}}</span>
                             @elseif($document->status==config('constants.STATUS.APPROVED'))
@@ -244,7 +256,7 @@
                                               aria-expanded="true">{{ucfirst(config('settings.file_label_plural'))}}</a>
                         </li>
                         @can('verify', $document)
-                            <li class=""><a href="#tab_verification" data-toggle="tab"
+                            <li class=""><a href="{!! route('files.index') !!}" 
                                             aria-expanded="false">Verification</a></li>
                         @endcan
                         <li class=""><a href="#tab_activity" data-toggle="tab" aria-expanded="false">Activity</a></li>
@@ -288,9 +300,9 @@
                                             <div class="box-header">
                                                 <div class="user-block">
                                                     <span class="label label-default">{{$file->fileType->name}}</span>
-                                                    <span class="label label-default">{{$document->status}}</span>
+                                                    <span class="label label-default">{{$file->status}}</span>
                                                     <span class="username" style="cursor:pointer;"
-                                                          onclick="showFileModal({{json_encode($file)}})">{{$file->name}}</span>
+                                                          onclick="showFileModal({{json_encode($file)}})">{{trimText($file->name, 20)}}</span>
                                                     <small class="description text-gray"><b
                                                             title="{{formatDateTime($file->created_at)}}"
                                                             data-toggle="tooltip">{{\Carbon\Carbon::parse($file->created_at)->diffForHumans()}}</b>
@@ -349,8 +361,10 @@
                         </div>
                         @can('verify', $document)
                             <div class="tab-pane" id="tab_verification">
+                            {!! route('users.index') !!}
                                 @if ($document->status!=config('constants.STATUS.APPROVED'))
                                     {!! Form::open(['route' => ['documents.verify', $document->id], 'method' => 'post']) !!}
+                                   
                                     <div class="form-group text-center">
                                     <textarea class="form-control" name="vcomment" id="vcomment" rows="4"
                                               placeholder="Enter Comment to verify with comment(optional)"></textarea>
@@ -364,17 +378,18 @@
                                         </button>
                                     </div>
                                     {!! Form::close() !!}
-                                @else
-                                    <div class="form-group">
-                                        <span class="label label-success">Verified</span>
+                                @else 
+                                <div class="form-group">
+                                        @include('documents.files.index')
+                                        <!-- <span class="label label-success">Directory Verified</span> -->
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         Verifier: <b>{{$document->verifiedBy->name}}</b>
-                                    </div>
-                                    <div class="form-gorup">
+                                    </div> -->
+                                    <!-- <div class="form-gorup">
                                         Verified At: <b>{{formatDateTime($document->verified_at)}}</b>
                                         ({{\Carbon\Carbon::parse($document->verified_at)->diffForHumans()}})
-                                    </div>
+                                    </div> -->
                                 @endif
                             </div>
                         @endcan
