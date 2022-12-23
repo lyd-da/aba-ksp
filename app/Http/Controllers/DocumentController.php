@@ -11,6 +11,7 @@ use App\Http\Requests\CreateFilesRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\DocumentRepository;
+use App\Repositories\FileRepository;
 use App\Repositories\FileTypeRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\TagRepository;
@@ -33,6 +34,8 @@ class DocumentController extends Controller
 
     /** @var DocumentRepository */
     private $documentRepository;
+    /** @var FileRepository */
+    private $fileRepository;
 
     /** @var CustomFieldRepository */
     private $customFieldRepository;
@@ -48,13 +51,16 @@ class DocumentController extends Controller
         DocumentRepository $documentRepository,
         CustomFieldRepository $customFieldRepository,
         FileTypeRepository $fileTypeRepository,
-        PermissionRepository $permissionRepository
+        PermissionRepository $permissionRepository,
+        FileRepository $fileRepository
+        
     ) {
         $this->tagRepository = $tagRepository;
         $this->documentRepository = $documentRepository;
         $this->customFieldRepository = $customFieldRepository;
         $this->fileTypeRepository = $fileTypeRepository;
         $this->permissionRepository = $permissionRepository;
+        $this->fileRepository = $fileRepository;
     }
 
     /**
@@ -70,8 +76,13 @@ class DocumentController extends Controller
             $request->get('tags'),
             $request->get('status')
         );
+        $files = $this->fileRepository->searchFiles(
+            $request->get('search'),
+           
+            $request->get('status')
+        );
         $tags = $this->tagRepository->all();
-        return view('documents.index', compact('documents', 'tags'));
+        return view('documents.index', compact('documents', 'tags','files'));
     }
 
     /**
@@ -145,6 +156,12 @@ class DocumentController extends Controller
 
             $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
         }
+        // $files = $this->fileRepository->searchFiles(
+        //     $request->get('search'),
+        //     $request->get('tags'),
+        //     $request->get('status')
+        // );
+        // $tags = $this->tagRepository->all();
         return view('documents.show', $dataToRet);
     }
 
@@ -327,6 +344,7 @@ class DocumentController extends Controller
     public function storeFiles($id, CreateFilesRequest $request)
     {
         $document = Document::findOrFail($id);
+        // $tags = Document::findOrFail($id);
         $this->authorize('update', [$document, $document->tags->pluck('id')]);
         $filesData = $request->all('files')['files'] ?? [];
         /* Prepare final data */
@@ -376,6 +394,7 @@ class DocumentController extends Controller
             $filesData[$i]['file'] = $file->hashName();
             $filesData[$i]['status'] = config('constants.STATUS.PENDING');
             $filesData[$i]['created_by'] = Auth::id();
+            $filesData[$i]['status'] = config('constants.STATUS.PENDING');
             $filesData[$i]['created_at'] = now();
             $filesData[$i]['updated_at'] = now();
         }

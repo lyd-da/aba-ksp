@@ -110,4 +110,12 @@ class File extends Model
     {
         return $this->belongsTo(\App\User::class, 'verified_by', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    // public function review()
+    // {
+    //     return $this->hasOne(\App\Review::class, '', 'id');
+    // }
 }
