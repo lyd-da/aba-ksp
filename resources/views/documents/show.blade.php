@@ -120,6 +120,11 @@
          .rate:not(:checked) > label:before {
          content: '★ ';
          }
+         .star {
+         content: '★ ';
+         color: #ffc700;
+
+         }
          .rate > input:checked ~ label {
          color: #ffc700;
          }
@@ -141,6 +146,7 @@
          .rating-container textarea:focus, .rating-container input:focus {
          color: #000;
          }
+   
     </style>
 @stop
 @section('scripts')
@@ -209,11 +215,84 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
+
+                        
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        
                         <h2 class="modal-title" style="color:#0071a1;">@{{name}}</h2>
-                    </div>
+                        <label>{{ucfirst(config('settings.file_label_singular'))." Type"}}</label>
+                        <p>@{{file_type.name}}</p>
+                        <label>Uploaded By:</label>
+                        <p>@{{created_by.name}}</p>
+                        <label>Uploaded On:</label>
+                        <p>@{{formatDate created_at}}</p>
+                            $file_id = @{{id}};
+                        {!! Form::open(['route' => ['review.file',$file_id], 'method'=>'post']) !!}
+                        <div class="form-group row">
+                            <div class=" col-sm-6">
+                                   <input class="form-control" type="text" name="name" placeholder="Name" maxlength="40" required/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="email" name="email" placeholder="Email" maxlength="80" required/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                
+                                <div class="col-sm-6">
+                                    <div class="rate">
+                                        <input type="radio" id="star5" class="rate" name="rate_count" value="5"/>
+                                        <label for="star5" title="text">5 stars</label>
+                                        <input type="radio" checked id="star4" class="rate" name="rate_count" value="4"/>
+                                        <label for="star4" title="text">4 stars</label>
+                                      <input type="radio" id="star3" class="rate" name="rate_count" value="3"/>
+                                      <label for="star3" title="text">3 stars</label>
+                                      <input type="radio" id="star2" class="rate" name="rate_count" value="2">
+                                      <label for="star2" title="text">2 stars</label>
+                                      <input type="radio" id="star1" class="rate" name="rate_count" value="1"/>
+                                      <label for="star1" title="text">1 star</label>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="form-group row mt-4">
+                                 <div class="col-sm-12 ">
+                                     <textarea class="form-control" name="comment" rows="6 " placeholder="Comment" maxlength="200"></textarea>
+                                    </div>
+                                </div>
+                                <div class="mt-3 ">
+                                    <button class="btn btn-sm py-2 px-3 btn-info">Submit
+                                    </button>
+                                </div>
+                                
+                                
+                                
+                            </div>
+                           
+                            {!! Form::close() !!}
                     <div class="modal-body">
-                        <div class="col-md-3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
+                        {{-- <div class="col-md-3">
                             
                             <div class="form-group">
                                 <label>{{ucfirst(config('settings.file_label_singular'))." Type"}}</label>
@@ -242,7 +321,7 @@
                                         data="{{\Illuminate\Support\Str::finish(route('files.showfile',['dir'=>'original']),"/")}}@{{file}}">
                                 </object>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="clearfix"></div>
                     <div class="modal-footer">
@@ -451,13 +530,18 @@
                                                 <div class="user-block">
                                                     <span class="label label-default">{{$file->fileType->name}}</span>
                                                     <span class="label label-default">{{$document->status}}</span>
+                                                    </span>
                                                     <span class="username" style="cursor:pointer;"
                                                           onclick="showFileModal({{json_encode($file)}})">{{$file->name}}</span>
                                                     <small class="description text-gray"><b
                                                             title="{{formatDateTime($file->created_at)}}"
                                                             data-toggle="tooltip">{{\Carbon\Carbon::parse($file->created_at)->diffForHumans()}}</b>
                                                         by <b>{{$file->createdBy->name}}</b></small>
-                                                </div>
+                                                        <div class="star">
+                                                            <label for="star5" title="text">5 ★</label>
+                                                            
+                                                        </div>
+                                                    </div>
                                                 <div class="pull-right box-tools">
                                                     <button type="button"
                                                             class="btn btn-default btn-flat dropdown-toggle"

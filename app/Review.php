@@ -18,12 +18,29 @@ class Review extends Model
         'deleted_by',
     ];
 
+ /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'rate_count' => 'integer',
+        'comment' => 'string'
+    ];
 
     protected $attributes = [
         'deleted' => false,
     ];
 
-
+/**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'rate_count' => 'required|integer',
+        'comment' => 'required|string'
+    ];
 
     // public function createdBy()
     // {
