@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','check_block']], func
     Route::resource('tags', 'TagController');
 
     Route::resource('documents', 'DocumentController');
+    Route::resource('files', 'FileController');
     Route::get('/list-file', 'FileController@index')->name('files.index');
     Route::post('document-verify/{id}','DocumentController@verify')->name('documents.verify');
     Route::post('file-verify/{id}','DocumentController@verifyFile')->name('file.verify');
@@ -51,5 +52,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','check_block']], func
     Route::get('/_files/{dir?}/{file?}','HomeController@showFile')->name('files.showfile');
     Route::get('/_zip/{id}/{dir?}','HomeController@downloadZip')->name('files.downloadZip');
     Route::post('/_pdf','HomeController@downloadPdf')->name('files.downloadPdf');
-    Route::post('review-file/{file_id}', 'ReviewController@store') ->name('review.file');
+    Route::post('review-file', 'ReviewController@store') ->name('review.file');
 });

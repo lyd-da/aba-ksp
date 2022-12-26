@@ -160,6 +160,8 @@ abstract class BaseRepository
     public function find($id, $columns = ['*'])
     {
         $query = $this->model->newQuery();
+        // ddd($query);
+
 
         return $query->find($id, $columns);
     }

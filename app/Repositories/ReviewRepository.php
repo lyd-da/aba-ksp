@@ -40,4 +40,10 @@ class ReviewRepository extends BaseRepository
     {
         return Review::class;
     }
+    public function query($file_id)
+    {
+        // ddd($this->model->newQuery()->where('file_id','=',$file_id));
+
+        return Review::where('file_id','=',$file_id)->get();
+    }
 }

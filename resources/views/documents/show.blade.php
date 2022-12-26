@@ -251,8 +251,9 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         
                        
-                         {!!Form::open(['route' => ['review.file',['file_id' => 23]], 'method'=>'post']) !!}
+                         {!!Form::open(['route' => ['review.file'], 'method'=>'post']) !!}
                         <div class="form-group row">
+                           <input type="hidden" name="file_id" value="@{{id}}">
                             <div class=" col-sm-6">
                                    <input class="form-control" type="text" name="name" placeholder="Name" maxlength="40" required/>
                                 </div>
@@ -370,30 +371,23 @@
 
     }
 
-    // function showFileRateModal(data) {
-    //     var template = Handlebars.compile($("#file-rate-modal-template").html());
-    //     var html = template(data);
-    //     $("#modal-space").html(html);
-    //     $('#fileRateModal').on('show', function(e) {
-    //         var link = e.relatedTarget(),
-    //             modal = $(this),
-    //             file_id = link.data("id");
+    function showFileRateModal(data) {
+        var template = Handlebars.compile($("#file-rate-modal-template").html());
+        var html = template(data);
+        $("#modal-space").html(html);
+        // $('#fileRateModal').on('show', function(e) {
+        //     var link = e.relatedTarget(),
+        //         modal = $(this),
+        //         file_id = link.data("id");
 
 
-    //         modal.find("#id").val(file_id);
+        //     modal.find("#id").val(file_id);
 
-    //     });
-    //     $("#fileRateModal").modal('show');
+        // });
+        $("#fileRateModal").modal('show');
 
-    // }
-    $('#fileRateModal').on('show', function(e) {
-    var link     = e.relatedTarget(),
-        modal    = $(this),
-        id = link.data("id");
-        
-
-    modal.find("#id").val(id);
-});
+    }
+    
 
     function submitPdfForm(varient) {
         $("input[name='images_varient']").val(varient);
@@ -420,25 +414,7 @@
 <div id="modal-space">
 </div>
 <section class="content-header" style="margin-bottom: 27px;">
-<div class="box-header">
-                <div class="form-group hidden visible-xs">
-                    <button type="button" class="btn btn-default btn-block" data-toggle="collapse"
-                            data-target="#filterForm"><i class="fa fa-filter"></i> Filter
-                    </button>
-                </div>
-                {!! Form::model(request()->all(), ['method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
-                <div class="form-group">
-                    <label for="search" class="sr-only">Search</label>
-                    {!! Form::text('search',null,['class'=>'form-control input-sm','placeholder'=>'Search...']) !!}
-                </div>
-               
-                <div class="form-group">
-                    <label for="status" class="sr-only">{{config('settings.tags_label_singular')}}:</label>
-                    {!! Form::select('status',['0'=>"ALL",config('constants.STATUS.PENDING')=>config('constants.STATUS.PENDING'),config('constants.STATUS.APPROVED')=>config('constants.STATUS.APPROVED'),config('constants.STATUS.REJECT')=>config('constants.STATUS.REJECT')],null,['class'=>'form-control input-sm']) !!}
-                </div>
-                <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-filter"></i> Filter</button>
-                {!! Form::close() !!}
-            </div>
+    @include('files.index')
             
     <h1 class="pull-right" style="margin-bottom: 5px;">
         <div class="dropdown" style="display: inline-block">
@@ -592,9 +568,9 @@
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="javascript:void(0);" onclick="showFileModal({{json_encode($file)}})">Show
+                                                <li><a href="javascript:void(0);" onclick="showFileModal({{json_encode($file)}})">Show 
                                                         Detail</a></li>
-                                                <li><a href="#" data-target="fileRateModal" data-toggle="modal" data-id="{{ $file->id }}">Rate ✩</a></li>
+                                                <li><a href="javascript:void(0);" onclick="showFileRateModal({{json_encode($file)}})">Rate ✩</a></li>
                                                 <li>
                                                     <a href="{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}?force=true" download>Download
                                                         original</a>
@@ -649,7 +625,7 @@
                         {!! Form::close() !!}
                         @else
                         <div class="form-group">
-                            @include('documents.files.index')
+                            @include('files.index')
                             <!-- <span class="label label-success">Directory Verified</span> -->
                         </div>
                         <!-- <div class="form-group">

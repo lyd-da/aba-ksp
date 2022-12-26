@@ -54,20 +54,36 @@ class ReviewController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateReviewRequest $request, $file_id)
+
+   
+
+    public function store(CreateReviewRequest $request)
     {
         $this->isSuperAdmin();
         $input = $request->all();
-        $input['file_id'] = $file_id;
+        // $input['file_id'] = $input['file_id'];
         $input['reviewed_by'] = Auth::id();
-        $input['status'] = config('constants.STATUS.PENDING'); 
-        $input['deleted'] = false; 
-        
-        $review = $this->reviewRepository->create($input);
+        $input['status'] = config('constants.STATUS.PENDING');
+        $input['deleted'] = false;
+        $file_id =(int)$input['file_id'];
+        print_r($input);
+
+       $review = $this->reviewRepository->query($file_id);
+       // $review = $this->reviewRepository->find($file_id);
+       
+       if (empty($review)) {
+           $review = $this->reviewRepository->create($input);
+           ddd("1");
+        } else {
+
+            $review = $this->reviewRepository->update($request->all(), $review->id);
+           ddd("2");
+
+        }
+
+
 
         Flash::success('File reviewed successfully.');
-       
-
         return redirect()->back();
     }
 

@@ -24,6 +24,10 @@ class Review extends Model
      * @var array
      */
     protected $casts = [
+        'id' => 'integer',
+        'reviewed_by' => 'integer',
+        'status' => 'string',
+        'file_id' => 'integer',
         'rate_count' => 'integer',
         'comment' => 'string'
     ];
