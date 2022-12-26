@@ -65,21 +65,21 @@ class ReviewController extends AppBaseController
         $input['reviewed_by'] = Auth::id();
         $input['status'] = config('constants.STATUS.PENDING');
         $input['deleted'] = false;
-        $file_id =(int)$input['file_id'];
-        print_r($input);
+        // $file_id =(int)$input['file_id'];
+        // print_r($input);
 
-       $review = $this->reviewRepository->query($file_id);
+    //    $review = $this->reviewRepository->query($file_id);
        // $review = $this->reviewRepository->find($file_id);
        
-       if (empty($review)) {
-           $review = $this->reviewRepository->create($input);
-           ddd("1");
-        } else {
+       $review = $this->reviewRepository->create($input);
+    //    if (empty($review)) {
+    //        ddd("1");
+    //     } else {
 
-            $review = $this->reviewRepository->update($request->all(), $review->id);
-           ddd("2");
+    //         $review = $this->reviewRepository->update($request->all(), $review->id);
+    //        ddd("2");
 
-        }
+    //     }
 
 
 

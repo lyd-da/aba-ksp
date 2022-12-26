@@ -2,66 +2,169 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\FileDataTable;
-// use App\Document;
-// use App\Http\Requests\CreateUserRequest;
-// use App\Http\Requests\UpdateUserRequest;
-// use App\Repositories\PermissionRepository;
-use App\Repositories\FileRepository;
-// use App\Tag;
-use Illuminate\Http\Request;
-
+use App\CustomField;
+use App\Document;
 use App\File;
-use Flash;
-use Response;
+use App\FileType;
+use App\Http\Requests\CreateDocumentRequest;
+use App\Http\Requests\CreateFilesRequest;
+use App\Http\Requests\UpdateDocumentRequest;
+use App\Repositories\CustomFieldRepository;
+use App\Repositories\DocumentRepository;
+use App\Repositories\FileRepository;
+use App\Repositories\FileTypeRepository;
+use App\Repositories\PermissionRepository;
+use App\Repositories\TagRepository;
+use App\Tag;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Laracasts\Flash\Flash;
+use Spatie\Permission\Models\Permission;
 
-class FileController extends AppBaseController
+class FileController extends Controller
 {
-    // /** @var  UserRepository */
-    // private $userRepository;
+    /** @var  TagRepository */
+    private $tagRepository;
 
-    // /** @var PermissionRepository */
-    // private $permissionRepository;
-
-    // public function __construct(UserRepository $userRepo,
-    //                             PermissionRepository $permissionRepository)
-    // {
-    //     $this->userRepository = $userRepo;
-    //     $this->permissionRepository = $permissionRepository;
-    // }
+    /** @var DocumentRepository */
+    private $documentRepository;
     /** @var FileRepository */
     private $fileRepository;
 
-    /**
-     * Display a listing of the User.
-     *
-     * @param FileDataTable $fileDataTable
-     * @return Response
-     */
-    // public function index(FileDataTable $fileDataTable)
-    // {
-    //     $this->isSuperAdmin();
-    //     return $fileDataTable->render('documents.files.index');
-    // }
+    /** @var CustomFieldRepository */
+    private $customFieldRepository;
+
+    /** @var FileTypeRepository */
+    private $fileTypeRepository;
+
+    /** @var PermissionRepository $permissionRepository */
+    private $permissionRepository;
+
     public function __construct(
-
-
-        FileRepository $fileRepository
-
+        TagRepository $tagRepository,
+        FileRepository $fileRepository,
+        CustomFieldRepository $customFieldRepository,
+        FileTypeRepository $fileTypeRepository,
+        PermissionRepository $permissionRepository
+        // ,
+        // FileRepository $fileRepository
+        
     ) {
-
+        $this->tagRepository = $tagRepository;
+        // $this->documentRepository = $documentRepository;
+        $this->customFieldRepository = $customFieldRepository;
+        $this->fileTypeRepository = $fileTypeRepository;
+        $this->permissionRepository = $permissionRepository;
         $this->fileRepository = $fileRepository;
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
-        // $this->authorize('viewAny', File::class);
-
-        $files = $this->fileRepository->searchFiles(
+        $this->authorize('viewAny', File::class);
+        $documents = $this->fileRepository->searchFiles(
             $request->get('search'),
-
+            // $request->get('tags'),
             $request->get('status')
         );
-        
-        return view('files.index', $files);
+        // $files = $this->fileRepository->searchFiles(
+        //     $request->get('search'),
+           
+        //     $request->get('status')
+        // );
+        $tags = $this->tagRepository->all();
+        ddd('dsalkfjkl');
+        return view('documents.index', compact('documents', 'tags','files'));
+    }
+
+   
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CreateDocumentRequest $request)
+    {
+        $data = $request->all();
+        $data['created_by'] = Auth::id();
+        $data['status'] = config('constants.STATUS.PENDING');
+
+        $this->authorize('store', [Document::class, $data['tags']]);
+
+        $document = $this->documentRepository->createWithTags($data);
+        Flash::success(ucfirst(config('settings.document_label_singular')) . " Saved Successfully");
+        $document->newActivity(ucfirst(config('settings.document_label_singular')) . " Created");
+
+        //create permission for new document
+        foreach (config('constants.DOCUMENT_LEVEL_PERMISSIONS') as $perm_key => $perm) {
+            Permission::create(['name' => $perm_key . $document->id]);
+        }
+
+        if ($request->has('savnup')) {
+            return redirect()->route('documents.files.create', $document->id);
+        }
+        return redirect()->route('documents.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        /** @var Document $document */
+        $document = $this->documentRepository
+            ->getOneEagerLoaded($id, ['files', 'files.fileType', 'files.createdBy', 'activities', 'activities.createdBy', 'tags']);
+        if (empty($document)) {
+            abort(404);
+        }
+        $this->authorize('view', $document);
+
+        $missigDocMsgs = $this->documentRepository->buildMissingDocErrors($document);
+        $dataToRet = compact('document', 'missigDocMsgs');
+
+        if (auth()->user()->can('user manage permission')) {
+            $users = User::where('id', '!=', 1)->get();
+            $thisDocPermissionUsers = $this->permissionRepository->getUsersWiseDocumentLevelPermissionsForDoc($document);
+            //Tag Level permission
+            $tagWisePermList = $this->permissionRepository->getTagWiseUsersPermissionsForDoc($document);
+            //Global Permission
+            $globalPermissionUsers = $this->permissionRepository->getGlobalPermissionsForDoc($document);
+
+            $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
+        }
+        // $files = $this->fileRepository->searchFiles(
+        //     $request->get('search'),
+        //     $request->get('tags'),
+        //     $request->get('status')
+        // );
+        // $tags = $this->tagRepository->all();
+        return view('documents.show', $dataToRet);
+    }
+
+    public function storePermission($id, Request $request)
+    {
+        abort_if(!auth()->user()->can('user manage permission'), 403, 'This action is unauthorized .');
+        $input = $request->all();
+        $user = User::findOrFail($input['user_id']);
+        $doc_permissions = $input['document_permissions'];
+        $document = Document::findOrFail($id);
+        $this->permissionRepository->setDocumentLevelPermissionForUser($user, $document, $doc_permissions);
+        Flash::success(ucfirst(config('settings.document_label_singular')) . " Permission allocated");
+        return redirect()->back();
     }
 }

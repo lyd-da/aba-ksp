@@ -76,11 +76,11 @@ class DocumentController extends Controller
             $request->get('tags'),
             $request->get('status')
         );
-        $files = $this->fileRepository->searchFiles(
-            $request->get('search'),
+        // $files = $this->fileRepository->searchFiles(
+        //     $request->get('search'),
            
-            $request->get('status')
-        );
+        //     $request->get('status')
+        // );
         $tags = $this->tagRepository->all();
         return view('documents.index', compact('documents', 'tags','files'));
     }

@@ -254,12 +254,8 @@
                          {!!Form::open(['route' => ['review.file'], 'method'=>'post']) !!}
                         <div class="form-group row">
                            <input type="hidden" name="file_id" value="@{{id}}">
-                            <div class=" col-sm-6">
-                                   <input class="form-control" type="text" name="name" placeholder="Name" maxlength="40" required/>
-                                </div>
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="email" name="email" placeholder="Email" maxlength="80" required/>
-                                </div>
+                            <div>
+                                <h1>@{{name}}</h1>
                             </div>
                             <div class="form-group row">
                                 
@@ -349,11 +345,7 @@
                         </div> --}}
                     </div>
                     <div class="clearfix"></div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i>
-                            Close
-                        </button>
-                    </div>
+                  
                 </div>
 
             </div>
@@ -540,6 +532,11 @@
                         @endif
                         <div class="row">
                             @foreach ($document->files->sortBy('file_type_id') as $file)
+                            <?php 
+$rate_count_plunk = App\Review::where('file_id','=',$file->id)->pluck('rate_count');
+$rate_count_avg = $rate_count_plunk->avg();
+$no_of_reviews = $rate_count_plunk->count();
+?>
                             <div class="col-xs-6 col-md-6 col-lg-4">
                                 <div class="box custom-box">
                                     <div class="box-body">
@@ -558,7 +555,11 @@
                                             <small class="description text-gray"><b title="{{formatDateTime($file->created_at)}}" data-toggle="tooltip">{{\Carbon\Carbon::parse($file->created_at)->diffForHumans()}}</b>
                                                 by <b>{{$file->createdBy->name}}</b></small>
                                             <div class="star">
-                                                <label for="star5" title="text">5 ★</label>
+                                                @if($no_of_reviews ==0)         
+                                                <label for="star5" title="text">Not Rated Yet</label>         
+@else
+<label for="star5" title="text">{{round($rate_count_avg,1)}} ★</label> <span class="no_of_reviews">({{$no_of_reviews}})</span>
+@endif
 
                                             </div>
                                         </div>
