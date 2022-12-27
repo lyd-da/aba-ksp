@@ -4,7 +4,7 @@
                 data-target="#filterForm"><i class="fa fa-filter"></i> Filter
         </button>
     </div>
-    {!! Form::model(request()->all(), ['method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
+    {!! Form::open(['route' => ['search', $document->id], 'method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
     <div class="form-group">
         <label for="search" class="sr-only">Search</label>
         {!! Form::text('search',null,['class'=>'form-control input-sm','placeholder'=>'Search...']) !!}
@@ -17,3 +17,12 @@
     <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-filter"></i> Filter</button>
     {!! Form::close() !!}
 </div>
+{{-- <ul class="list-group mt-3">
+    @if(!empty($files))
+        @forelse($files as $file)
+            <li class="list-group-item">{{ $file->name }}</li>
+        @empty
+            <li class="list-group-item list-group-item-danger">User Not Found.</li>
+        @endforelse
+    @endif
+</ul> --}}

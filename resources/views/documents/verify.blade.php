@@ -25,10 +25,7 @@
                     <th scope="row">{{$file->id}}</th>
                     <td>{{$file->name}}</td>
                     <td>{{$file->status}}</td>
-                    <td> {!! Form::open(['route' => ['
-                        
-                        
-                        .verify', $file->id], 'method' => 'post']) !!}
+                    <td> {!! Form::open(['route' => ['file.verify', $file->id], 'method' => 'post']) !!}
 
 
                         <div class="form-group">
@@ -41,7 +38,7 @@
                     </td>
                 </tr>
                 
-                <!-- @else -->
+                {{-- <!-- @else -->
                 <!-- <div class="form-group">
                     <span class="label label-success">{{$file->name}}</span>
                 </div>
@@ -51,7 +48,7 @@
                 <div class="form-gorup">
                     Verified At: <b>{{formatDateTime($file->verified_at)}}</b>
                     ({{\Carbon\Carbon::parse($file->verified_at)->diffForHumans()}})
-                </div> -->
+                </div> --> --}}
             
                 @endforeach
             </tbody>

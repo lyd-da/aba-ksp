@@ -49,6 +49,7 @@ class FileController extends Controller
     public function __construct(
         TagRepository $tagRepository,
         FileRepository $fileRepository,
+        DocumentRepository $documentRepository,
         CustomFieldRepository $customFieldRepository,
         FileTypeRepository $fileTypeRepository,
         PermissionRepository $permissionRepository
@@ -57,7 +58,7 @@ class FileController extends Controller
         
     ) {
         $this->tagRepository = $tagRepository;
-        // $this->documentRepository = $documentRepository;
+        $this->documentRepository = $documentRepository;
         $this->customFieldRepository = $customFieldRepository;
         $this->fileTypeRepository = $fileTypeRepository;
         $this->permissionRepository = $permissionRepository;
@@ -71,23 +72,72 @@ class FileController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('viewAny', File::class);
-        $documents = $this->fileRepository->searchFiles(
-            $request->get('search'),
-            // $request->get('tags'),
-            $request->get('status')
-        );
+        // $this->authorize('viewAny', File::class);
+        $files = File::where('name', 'like', '%' . $request->get('search') . '%')->get();
+            //   echo '<pre>'; print_r($files); echo '</pre>';
+
         // $files = $this->fileRepository->searchFiles(
         //     $request->get('search'),
-           
+        //     // $request->get('tags'),
         //     $request->get('status')
         // );
-        $tags = $this->tagRepository->all();
-        ddd('dsalkfjkl');
-        return view('documents.index', compact('documents', 'tags','files'));
+        // // $files = $this->fileRepository->searchFiles(
+        // //     $request->get('search'),
+           
+        // //     $request->get('status')
+        // // );
+        // $tags = $this->tagRepository->all();
+        // ddd('dsalkfjkl');
+        return view('files.index')->with('files', $files);
     }
 
-   
+    public function search($docId,Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+        $status = $request->input('status');
+        // ddd($status);
+    
+        // Search in the title and body columns from the posts table
+        // $files = File::query()->where('document_id',$docId)
+        //     ->where('name', 'LIKE', "%{$search}%" )
+            
+        //     ->get();
+        if(!empty($status) && $status != '0'){
+
+            $files = File::query()->where('document_id',$docId)
+                ->where('status', 'LIKE', "%{$status}%" )->orWhere('status', $status)
+                
+                ->get();
+        } else {
+            $files = File::query()->where('document_id',$docId)
+            ->where('name', 'LIKE', "%{$search}%" )
+            
+            ->get();
+        }
+        $document = $this->documentRepository
+            ->getOneEagerLoaded($docId, ['files', 'files.fileType', 'files.createdBy', 'activities', 'activities.createdBy', 'tags']);
+        if (empty($document)) {
+            abort(404);
+        }
+        $missigDocMsgs = $this->documentRepository->buildMissingDocErrors($document);
+        $dataToRet = compact('document', 'missigDocMsgs');
+
+        // if (auth()->user()->can('user manage permission')) {
+            if(true){
+            $users = User::where('id', '!=', 1)->get();
+      
+
+            $thisDocPermissionUsers = $this->permissionRepository->getUsersWiseDocumentLevelPermissionsForDoc($document);
+            //Tag Level permission
+            $tagWisePermList = $this->permissionRepository->getTagWiseUsersPermissionsForDoc($document);
+            //Global Permission
+            $globalPermissionUsers = $this->permissionRepository->getGlobalPermissionsForDoc($document);
+
+            $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
+        }
+        // Return the search view with the resluts compacted
+        return view('documents.show', compact('files','document', 'missigDocMsgs','users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
+    }
 
     /**
      * Store a newly created resource in storage.
