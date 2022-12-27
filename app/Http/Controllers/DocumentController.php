@@ -148,13 +148,15 @@ class DocumentController extends Controller
 
         if (auth()->user()->can('user manage permission')) {
             $users = User::where('id', '!=', 1)->get();
+        $files = File::where('document_id', $id)->get();
+
             $thisDocPermissionUsers = $this->permissionRepository->getUsersWiseDocumentLevelPermissionsForDoc($document);
             //Tag Level permission
             $tagWisePermList = $this->permissionRepository->getTagWiseUsersPermissionsForDoc($document);
             //Global Permission
             $globalPermissionUsers = $this->permissionRepository->getGlobalPermissionsForDoc($document);
 
-            $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
+            $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers','files'));
         }
         // $files = $this->fileRepository->searchFiles(
         //     $request->get('search'),

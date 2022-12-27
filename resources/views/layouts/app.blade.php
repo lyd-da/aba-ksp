@@ -24,7 +24,7 @@
 @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
-        <header class="main-header">
+        {{-- <header class="main-header">
 
             <!-- Logo -->
             <a href="{{route('admin.dashboard')}}" class="hidden-xs logo">
@@ -35,9 +35,9 @@
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation" style="background-color: ;">
                 <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                {{-- <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
-                </a>
+                </a> --}}
 
                 <span style="display: inline-block;width: 71vw;text-align: center;font-size: 20px;line-height: 50px;color: white;" class="visible-xs-inline-block">
                     <b>{{config('settings.system_title')}}</b>
@@ -86,7 +86,7 @@
                     </ul>
                 </div>
             </nav>
-        </header>
+        </header> --}}
 
         <!-- Left side column. contains the logo and sidebar -->
     @include('layouts.sidebar')

@@ -295,23 +295,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         
                         {{-- <div class="col-md-3">
                             
@@ -406,8 +389,23 @@
 <div id="modal-space">
 </div>
 <section class="content-header" style="margin-bottom: 27px;">
-    @include('files.index')
+    @include("files.index")
+    {{-- <form action="{{ route('search',$document->id) }}" method="GET">
+        <input type="text" name="search" required/>
+        <button type="submit">Search</button>
+    </form> --}}
+    {{-- @if($files->isNotEmpty())
+    @foreach ($files as $file)
+        <div class="post-list">
+            <p>{{ $file->name }}</p>
             
+        </div>
+    @endforeach
+@else 
+    <div>
+        <h2>No posts found</h2>
+    </div>
+@endif --}}
     <h1 class="pull-right" style="margin-bottom: 5px;">
         <div class="dropdown" style="display: inline-block">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-download"></i> Download Zip
@@ -506,7 +504,7 @@
                     <li class="active"><a href="#tab_files" data-toggle="tab" aria-expanded="true">{{ucfirst(config('settings.file_label_plural'))}}</a>
                     </li>
                     @can('verify', $document)
-                    <li class=""><a href="{!! route('files.index') !!}" aria-expanded="false">Verification</a></li>
+                    <li class=""><a href="#tab_verification" data-toggle="tab" aria-expanded="false">Verification</a></li>
                     @endcan
                     <li class=""><a href="#tab_activity" data-toggle="tab" aria-expanded="false">Activity</a></li>
                     @can('user manage permission')
@@ -531,7 +529,7 @@
                         </div>
                         @endif
                         <div class="row">
-                            @foreach ($document->files->sortBy('file_type_id') as $file)
+                            @foreach ($files->sortBy('file_type_id') as $file)
                             <?php 
 $rate_count_plunk = App\Review::where('file_id','=',$file->id)->pluck('rate_count');
 $rate_count_avg = $rate_count_plunk->avg();
@@ -610,7 +608,7 @@ $no_of_reviews = $rate_count_plunk->count();
                     </div>
                     @can('verify', $document)
                     <div class="tab-pane" id="tab_verification">
-                        {!! route('users.index') !!}
+                        
                         @if ($document->status!=config('constants.STATUS.APPROVED'))
                         {!! Form::open(['route' => ['documents.verify', $document->id], 'method' => 'post']) !!}
 
@@ -626,7 +624,7 @@ $no_of_reviews = $rate_count_plunk->count();
                         {!! Form::close() !!}
                         @else
                         <div class="form-group">
-                            @include('files.index')
+                            @include('documents.verify')
                             <!-- <span class="label label-success">Directory Verified</span> -->
                         </div>
                         <!-- <div class="form-group">
@@ -664,7 +662,7 @@ $no_of_reviews = $rate_count_plunk->count();
                     <div class="tab-pane" id="tab_permissions">
                         <div>
                             <div class="modal fade" id="modal-permission">
-                                {{Form::open(['route' => ['documents.store-permission',request('document')]])}}
+                                {{Form::open(['route' => ['documents.store-permission',$document->id]])}}
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
