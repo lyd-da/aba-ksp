@@ -62,11 +62,13 @@
     </script>
 @stop
 @section('content')
-    <section class="content-header">
-        <h1 class="pull-left">
+
+<section class="content-header">
+        @include('flash::message')
+        {{-- <h1 class="pull-left">
             {{ucfirst(config('settings.document_label_plural'))}}
-        </h1>
-        <h1 class="pull-right">
+        </h1> --}}
+        {{-- <h1 class="pull-right">
             @can('create',\App\Document::class)
                 <a href="{{route('documents.create')}}"
                    class="btn btn-primary">
@@ -74,12 +76,11 @@
                     Add New
                 </a>
             @endcan
-        </h1>
+        </h1> --}}
     </section>
-    <div class="content" style="margin-top: 22px;">
+    <div class="content" style="margin-top: -10px;">
         <div class="clearfix"></div>
 
-        @include('flash::message')
 
         <div class="clearfix"></div>
         <div class="box box-primary">
@@ -110,9 +111,23 @@
                     <label for="status" class="sr-only">{{config('settings.tags_label_singular')}}:</label>
                     {!! Form::select('status',['0'=>"ALL",config('constants.STATUS.PENDING')=>config('constants.STATUS.PENDING'),config('constants.STATUS.APPROVED')=>config('constants.STATUS.APPROVED'),config('constants.STATUS.REJECT')=>config('constants.STATUS.REJECT')],null,['class'=>'form-control input-sm']) !!}
                 </div>
-                {{-- <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-filter"></i> Filter</button> --}}
+                <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-filter"></i> Filter</button>
                 {!! Form::close() !!}
-            </div>
+                {{-- <a href="{{route('documents.create')}}"
+                class="pull-righ btn btn-primary">
+                <i class="fa fa-plus"></i>
+                Add New
+            </a> --}}
+            <h1 class="pull-right" style="margin-top: -40px">
+                @can('create',\App\Document::class)
+                    <a href="{{route('documents.create')}}"
+                       class="btn btn-primary">
+                        <i class="fa fa-plus"></i>
+                        Add New
+                    </a>
+                @endcan
+            </h1>
+        </div>
             <div class="box-body">
                 <div class="row">
                     @foreach ($documents as $document)
@@ -178,7 +193,7 @@
                                                    style="background-color: {{$tag->color}};font-size: 0.93rem;">{{trimText($tag->name, $sliceLen)}}</small>
                                         @endforeach
                                     </span>
-                                        <h5 class="widget-user-username" title="{{$document->name}}"
+                                    <h5 class="widget-user-username" title="{{$document->name}}"
                                             data-toggle="tooltip">{{$document->name}}</h5>
                                         <h5 class="widget-user-desc" style="font-size: 12px"><span data-toggle="tooltip"
                                                                                                    title="{{formatDateTime($document->updated_at)}}">{{formatDate($document->updated_at)}}</span>

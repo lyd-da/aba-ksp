@@ -1,15 +1,17 @@
-<aside class="main-sidebar" id="sidebar-wrapper">
+
+<aside class="main-sidebar blue-background" id="sidebar-wrapper" style=" background-color: #0361d8;">
 
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
 
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
-            <div class="pull-left image">
+            {{-- <div class="pull-left image">
                 <img src="{{asset(config('settings.system_logo'))}}" class="img-circle"
                      alt="User Image"/>
-            </div>
-            <div class="pull-left info">
+            </div> --}}
+           
+            {{-- <div class="pull-left info">
                 @if (Auth::guest())
                 <p>{{config('settings.system_title')}}</p>
                 @else
@@ -17,11 +19,11 @@
                 @endif
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-            </div>
-        </div>
+            </div>--}}
+        </div> 
 
         <!-- search form (Optional) -->
-        <form action="#" method="get" class="sidebar-form">
+        {{-- <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
           <span class="input-group-btn">
@@ -29,9 +31,11 @@
             </button>
           </span>
             </div>
-        </form>
+        </form> --}}
         <!-- Sidebar Menu -->
-
+        {{-- <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a> --}}
         <ul class="sidebar-menu" data-widget="tree">
             @include('layouts.menu')
         </ul>

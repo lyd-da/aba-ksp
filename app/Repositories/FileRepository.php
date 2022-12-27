@@ -72,9 +72,9 @@ class FileRepository extends BaseRepository
         //         $q->whereIn('tag_id', $tag);
         //     });
         // }
-        if(!empty($status)){
-            $query->where('status',$status);
-        }
+        // if(!empty($status)){
+        //     $query->where('status',$status);
+        // }
         // $query = $query->with('tags');
         debug($query->toSql());
         if($paginate)

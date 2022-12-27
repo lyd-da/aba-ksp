@@ -1,30 +1,32 @@
+{{-- @include('layout.style') --}}
 @can('viewAny',\App\Document::class)
     <li class="{{ Request::is('admin/documents*') ? 'active' : '' }}">
         <a href="{!! route('documents.index') !!}"><i
-                class="fa fa-file"></i><span>{{ucfirst(config('settings.document_label_plural'))}}</span></a>
+                class="fa fa-file"style="color: whitesmoke"></i><span style="color: whitesmoke">{{ucfirst(config('settings.document_label_plural'))}}</span></a>
     </li>
+    <h1 class="awhite">Hello</h1>
 @endcan
 <li class="{{ Request::is('admin/home*') ? 'active' : '' }}">
-    <a href="{!! route('admin.dashboard') !!}"><i class="fa fa-home"></i><span>Home</span></a>
+    <a href="{!! route('admin.dashboard') !!}"><i class="fa fa-home" style="color: whitesmoke"></i><span class="bg-white" style="color: whitesmoke">Home</span></a>
 </li>
 @can('read users')
     <li class="{{ Request::is('admin/users*') ? 'active' : '' }}">
-        <a href="{!! route('users.index') !!}"><i class="fa fa-users"></i><span>Users</span></a>
+        <a href="{!! route('users.index') !!}" ><i class="fa fa-users"style="color: whitesmoke"></i><span style="color: whitesmoke">Users</span></a>
     </li>
 @endcan
 @can('read tags')
     <li class="{{ Request::is('admin/tags*') ? 'active' : '' }}">
         <a href="{!! route('tags.index') !!}"><i
-                class="fa fa-tags"></i><span>{{ucfirst(config('settings.tags_label_plural'))}}</span></a>
+                class="fa fa-tags" style="color: whitesmoke"></i><span style="color: whitesmoke">{{ucfirst(config('settings.tags_label_plural'))}}</span></a>
     </li>
 @endcan
 @if(auth()->user()->is_super_admin)
     <li class="treeview {{ Request::is('admin/advanced*') ? 'active' : '' }}">
         <a href="#">
-            <i class="fa fa-info-circle"></i>
-            <span>Advanced Settings</span>
+            <i class="fa fa-info-circle" style="color: whitesmoke"></i>
+            <span style="color: whitesmoke">Advanced Settings</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
+              <i class="fa fa-angle-left pull-right" style="color: whitesmoke"></i>
             </span>
         </a>
         <ul class="treeview-menu">

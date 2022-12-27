@@ -24,26 +24,28 @@
 @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
-        <header class="main-header">
+        <header class="main-header" style="box-shadow: none">
 
             <!-- Logo -->
-            <a href="{{route('admin.dashboard')}}" class="hidden-xs logo">
+            {{-- <a href="{{route('admin.dashboard')}}" class="hidden-xs logo">
                 <span class="logo-mini"><b>{{config('settings.system_title')[0]}}</b></span>
                 <span class="logo-lg"><b>{{config('settings.system_title')}}</b></span>
-            </a>
+            </a> --}}
 
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top" role="navigation" style="background-color: ;">
+            <nav class="navbar navbar-static-top" role="navigation" style="background-color: white; ">
                 <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                {{-- <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
-                </a>
+                </a> --}}
 
                 <span style="display: inline-block;width: 71vw;text-align: center;font-size: 20px;line-height: 50px;color: white;" class="visible-xs-inline-block">
                     <b>{{config('settings.system_title')}}</b>
                 </span>
+                
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
+                    
                     <ul class="nav navbar-nav">
                         <!-- User Account Menu -->
                         <li class="dropdown user user-menu">
@@ -51,10 +53,12 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
                                 <img src="{{asset(config('settings.system_logo'))}}"
-                                     class="user-image" alt="User Image"/>
+                                     class="user-image" alt="User Image" style="width: 30px;height:30px;margin-top:5px"/>
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">{!! Auth::user()->name !!}</span>
-                            </a>
+                                <span class="hidden-xs" style="color: black; font-size:12px ">{!! Auth::user()->name !!}</span>
+                                <span class="hidden-xs" style="color: gray; display:block; font-size:12px "><i class="fa fa-circle text-success" ></i> Online</span>
+                            <!-- Status -->
+                        </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
@@ -95,6 +99,7 @@
             @yield('content')
         </div>
     </div>
+    
 @else
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
