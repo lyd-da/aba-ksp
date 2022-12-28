@@ -90,7 +90,7 @@
                     </ul>
                 </div>
             </nav>
-        </header>
+        </header> --}}
 
         <!-- Left side column. contains the logo and sidebar -->
     @include('layouts.sidebar')
