@@ -15,6 +15,7 @@
         <a class="side-bar-tile" href="{!! route('documents.index') !!}"><i
                 class="side-bar-tile-content fa fa-file"></i><span class="side-bar-tile-content">{{ucfirst(config('settings.document_label_plural'))}}</span></a>
     </li>
+    <h1 class="awhite">Hello</h1>
 @endcan
 <li class="{{ Request::is('admin/home*') ? 'active' : '' }}">
     <a class="side-bar-tile" href="{!! route('admin.dashboard') !!}"><i class="side-bar-tile-content fa fa-home"></i><span class="side-bar-tile-content bg-white">Home</span></a>
