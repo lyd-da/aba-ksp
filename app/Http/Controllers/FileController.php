@@ -136,7 +136,7 @@ class FileController extends Controller
             $dataToRet = array_merge($dataToRet, compact('users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
         }
         // Return the search view with the resluts compacted
-        return view('documents.show', compact('files','document', 'missigDocMsgs','users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
+        return view('documents.showTable', compact('files','document', 'missigDocMsgs','users', 'thisDocPermissionUsers', 'tagWisePermList', 'globalPermissionUsers'));
     }
 
     /**

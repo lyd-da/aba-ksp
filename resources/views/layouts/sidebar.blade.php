@@ -1,5 +1,13 @@
-
+<style>
+    .title{
+        color: whitesmoke;
+        font-family:'Times New Roman', Times, serif;
+        margin-top: -30px;
+        padding-left: 10px
+    }
+</style>
 <aside class="main-sidebar blue-background" id="sidebar-wrapper" style=" background-color: #0361d8;">
+    <div class="title"> <h2>{{config('settings.system_title')}}</h2></div>
 
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -7,7 +15,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             {{-- <div class="pull-left image">
-                <img src="{{asset(config('settings.system_logo'))}}" class="img-circle"
+                <img src="../../../public/doc.png" class="img-circle" style="background-color: white"
                      alt="User Image"/>
             </div> --}}
            

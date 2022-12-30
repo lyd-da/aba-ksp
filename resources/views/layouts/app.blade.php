@@ -56,7 +56,7 @@
                                      class="user-image" alt="User Image" style="width: 30px;height:30px;margin-top:5px"/>
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs" style="color: black; font-size:12px ">{!! Auth::user()->name !!}</span>
-                                <span class="hidden-xs" style="color: gray; display:block; font-size:12px "><i class="fa fa-circle text-success" ></i> Online</span>
+                                <span class="hidden-xs" style="color: gray; display:block; font-size:12px; min-width:120px "><i class="fa fa-circle text-success" ></i> Online</span>
                             <!-- Status -->
                         </a>
                             <ul class="dropdown-menu">

@@ -1,10 +1,10 @@
-<div class="box-header">
+<div  >
     <div class="form-group hidden visible-xs">
         <button type="button" class="btn btn-default btn-block" data-toggle="collapse"
                 data-target="#filterForm"><i class="fa fa-filter"></i> Filter
         </button>
     </div>
-    {!! Form::open(['route' => ['search', $document->id], 'method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
+    {!! Form::open(['route' => ['search', $document->id], 'method'=>'get','class'=>'form-inline visible hidden-xs','style'=>'float:left','id'=>'filterForm']) !!}
     <div class="form-group">
         <label for="search" class="sr-only">Search</label>
         {!! Form::text('search',null,['class'=>'form-control input-sm','placeholder'=>'Search...']) !!}
@@ -16,6 +16,13 @@
     </div>
     <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-filter"></i> Filter</button>
     {!! Form::close() !!}
+    <div>
+
+        @can('update', [$document, $document->tags->pluck('id')])
+                    <a href="{{route('documents.files.create',$document->id)}}" class="btn btn-primary btn-sm float-right" style="float: right;">New  <i class="fa fa-plus"></i>
+                        </a>
+                    @endcan
+    </div>
 </div>
 {{-- <ul class="list-group mt-3">
     @if(!empty($files))

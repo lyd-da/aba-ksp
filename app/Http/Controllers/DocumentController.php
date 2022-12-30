@@ -76,13 +76,48 @@ class DocumentController extends Controller
             $request->get('tags'),
             $request->get('status')
         );
+        $seafiles = File::query()
+        ->where('status', 'LIKE', "%{$request->get('search')}%" )->orWhere('status', $request->get('status'))
+        
+        ->get();
         // $files = $this->fileRepository->searchFiles(
         //     $request->get('search'),
            
         //     $request->get('status')
         // );
         $tags = $this->tagRepository->all();
-        return view('documents.index', compact('documents', 'tags','files'));
+        return view('documents.index', compact('documents', 'tags'));
+    }
+    public function docSearch(Request $request)
+    {
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        $this->authorize('viewAny', Document::class);
+        $documents = $this->documentRepository->searchDocuments(
+            $request->get('search'),
+            $request->get('tags'),
+            $request->get('status')
+        );
+        if(!empty($status) && $status != '0'){
+
+            $seafiles = File::query()
+                ->where('status', 'LIKE', "%{$status}%" )->orWhere('status', $status)
+                
+                ->get();
+        } else  if(!empty($search)){
+            $seafiles = File::query()
+            ->where('name', 'LIKE', "%{$search}%" )
+            
+            ->get();
+        }
+        // $files = $this->fileRepository->searchFiles(
+        //     $request->get('search'),
+           
+        //     $request->get('status')
+        // );
+        $tags = $this->tagRepository->all();
+        return view('documents.index', compact('documents', 'tags','seafiles'));
     }
 
     /**
@@ -164,7 +199,7 @@ class DocumentController extends Controller
         //     $request->get('status')
         // );
         // $tags = $this->tagRepository->all();
-        return view('documents.show', $dataToRet);
+        return view('documents.showTable', $dataToRet);
     }
 
     public function storePermission($id, Request $request)

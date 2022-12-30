@@ -57,9 +57,7 @@
     </style>
 @stop
 @section('scripts')
-    <script>
-
-    </script>
+@include('modal.show_file')
 @stop
 @section('content')
 
@@ -90,7 +88,7 @@
                             data-target="#filterForm"><i class="fa fa-filter"></i> Filter
                     </button>
                 </div>
-                {!! Form::model(request()->all(), ['method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
+                {!! Form::open(['route' => ['docsearch'], 'method'=>'get','class'=>'form-inline visible hidden-xs','id'=>'filterForm']) !!}
                 <div class="form-group">
                     <label for="search" class="sr-only">Search</label>
                     {!! Form::text('search',null,['class'=>'form-control input-sm','placeholder'=>'Search...']) !!}
@@ -121,9 +119,9 @@
             <h1 class="pull-right" style="margin-top: -40px">
                 @can('create',\App\Document::class)
                     <a href="{{route('documents.create')}}"
-                       class="btn btn-primary">
+                       class="btn btn-primary">New  
                         <i class="fa fa-plus"></i>
-                        Add New
+                       
                     </a>
                 @endcan
             </h1>
@@ -134,9 +132,9 @@
                         @cannot('view',$document)
                             @continue
                         @endcannot
-                        @if(!(auth()->user()->is_super_admin) && !($document->isVerified) && auth()->user()->cannot('verify', $document)  )
+                        {{-- @if(!(auth()->user()->is_super_admin) && !($document->isVerified) && auth()->user()->cannot('verify', $document)  )
                         @continue
-                        @endif
+                        @endif --}}
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 m-t-20" style="cursor:pointer;">
                             <div class="doc-box box box-widget widget-user-2">
                                 <div class="widget-user-header bg-gray bg-folder-shaper no-padding">
@@ -208,10 +206,87 @@
                         </div>
                     @endforeach
                 </div>
+                @if (!empty($seafiles))
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                           
+                            <th scope="col">Name</th>
+                            <th scope="col">File Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Rate</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                                @foreach ($seafiles->sortBy('name') as $file)
+                                <?php 
+    $rate_count_plunk = App\Review::where('file_id','=',$file->id)->pluck('rate_count');
+    $rate_count_avg = $rate_count_plunk->avg();
+    $no_of_reviews = $rate_count_plunk->count();
+    ?>
+                 <tr>
+                    <th scope="row" onclick="showFileModal({{json_encode($file)}})"><i
+                        class="fa fa-file-text" style=" color: #3c8dbc; margin-right: 10px"></i>{{$file->name}}.{{last(explode('.', $file->file))}}</th>
+                    
+                    <td>{{$file->fileType->name}}</td>
+                    <td>{{$file->status}}</td>
+                    @if($no_of_reviews ==0)         
+                        <td><label for="star5" title="text">Not Rated Yet</label>  </td>       
+                    @else
+                        <td><label for="star5" title="text">{{round($rate_count_avg,1)}} ★</label> <span class="no_of_reviews">({{$no_of_reviews}})</span></td>
+                @endif
+                <td>
+                    <div class="pull-right box-tools">
+                        <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="    background: transparent;border: none;">
+                            <i class="fa fa-ellipsis-v" style="color: #000;"></i>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" style="top: auto; bottom:auto; min-width: auto;">
+                            <li><a href="javascript:void(0);" onclick="showFileModal({{json_encode($file)}})">Show 
+                                    Detail</a></li>
+                            <li><a href="javascript:void(0);" onclick="showFileRateModal({{json_encode($file)}})">Rate ✩</a></li>
+                            <li>
+                                <a href="{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}?force=true" download>Download
+                                    original</a>
+                            </li>
+    
+                            @if (checkIsFileIsImage($file->file))
+                            @foreach (explode(",",config('settings.image_files_resize')) as $varient)
+                            <li>
+                                <a href="{{route('files.showfile',['dir'=>$varient,'file'=>$file->file])}}?force=true" download>Download {{$varient}}w</a>
+                            </li>
+                            @endforeach
+                            <li>
+                                <a href="javascript:void(0)" onclick="javascript:ImageEditor.open('{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}')">
+                                    Edit Image
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                {!! Form::open(['route' => ['documents.files.destroy', $file->id], 'method' => 'delete', 'style'=>'display:inline;']) !!}
+                                <button class="btn btn-link" onclick="conformDel(this,event)" type="submit">
+                                    Delete
+                                </button>
+                                {!! Form::close() !!}
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                </tr>
+           
+                                @endforeach
+                            </tbody>
+                        </table>
+              
+                @endif
             </div>
             <div class="box-footer">
                 {!! $documents->appends(request()->all())->render() !!}
             </div>
         </div>
     </div>
+
 @endsection

@@ -54,4 +54,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth','check_block']], func
     Route::post('/_pdf','HomeController@downloadPdf')->name('files.downloadPdf');
     Route::post('review-file', 'ReviewController@store') ->name('review.file');
     Route::get('/search/{docId}', 'FileController@search')->name('search');
+    Route::get('/docSearch', 'DocumentController@docSearch')->name('docsearch');
 });

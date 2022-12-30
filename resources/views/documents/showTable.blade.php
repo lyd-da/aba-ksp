@@ -173,7 +173,7 @@
 {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
 {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
-<script id="file-modal-template" type="text/x-handlebars-template">
+{{-- <script id="file-modal-template" type="text/x-handlebars-template">
     <div id="fileModal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -207,14 +207,8 @@
                                 <label>Uploaded On:</label>
                                 <p>@{{formatDate created_at}}</p>
                             </div>
-                            <div class="form-group">
-                                <label>Verified By:</label>
-                                <p>@{{verified_by}}</p>
-                            </div>
-                            <div class="form-group">
-                                <label>Verified At:</label>
-                                <p>@{{formatDate verified_at}}</p>
-                            </div>
+                          
+                            
                             @{{#each custom_fields}}
                             <div class="form-group">
                                 <label>@{{titleize @key}}</label>
@@ -240,7 +234,8 @@
 
             </div>
         </div>
-    </script>
+    </script> --}}
+    @include("modal.show_file")
 <script id="file-rate-modal-template" type="text/x-handlebars-template">
     <div id="fileRateModal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -252,10 +247,10 @@
                         
                        
                          {!!Form::open(['route' => ['review.file'], 'method'=>'post']) !!}
-                        <div class="form-group row">
+                        <div class="form-group row" style="margin-left: 50px; margin-right: 50px">
                            <input type="hidden" name="file_id" value="@{{id}}">
                             <div>
-                                <h1>@{{name}}</h1>
+                                <h2>@{{name}}</h2>
                             </div>
                             <div class="form-group row">
                                 
@@ -389,55 +384,56 @@
 <div id="modal-space">
 </div>
 <section class="content-header" style="margin-bottom: 27px;">
-    @include("files.index")
-    {{-- <form action="{{ route('search',$document->id) }}" method="GET">
-        <input type="text" name="search" required/>
-        <button type="submit">Search</button>
-    </form> --}}
-    {{-- @if($files->isNotEmpty())
-    @foreach ($files as $file)
-        <div class="post-list">
-            <p>{{ $file->name }}</p>
+
+<div class="pull-left">
+    <h1 class="pull-left" style="margin-bottom: 5px;">{{$document->name}} 
+</h1>
+<span class="" style="margin-right: 15px;">
+{!! $document->isVerified ? '<i title="Verified" data-toggle="tooltip" class="fa fa-check-circle" style="color: #388E3C; margin-top:20px"></i>':'<i title="Unverified" data-toggle="tooltip" class="fa fa-remove" style="color: #f44336;"></i>' !!}
+</span>
+    {{-- <label>{{ucfirst(config('settings.tags_label_plural'))}}:</label> --}}
+    <p>
+        @foreach ($document->tags as $tag)
+        <small class="label" style="background-color: {{$tag->color}};">{{trimText($tag->name,20)}}</small>
+        @endforeach
+    </p>
+   
+</div>
+    
+<h1 class="pull-right" style="margin-bottom: 5px;">
             
-        </div>
-    @endforeach
-@else 
-    <div>
-        <h2>No posts found</h2>
+    <div class="dropdown" style="display: inline-block">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-download"></i> Download Zip
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{route('files.downloadZip',['dir'=>'all','id'=>$document->id])}}">All</a>
+            </li>
+            <li>
+                <a href="{{route('files.downloadZip',['dir'=>'original','id'=>$document->id])}}">Original</a>
+            </li>
+            @foreach (explode(",",config('settings.image_files_resize')) as $varient)
+            <li>
+                <a href="{{route('files.downloadZip',['dir'=>$varient,'id'=>$document->id])}}">{{$varient}}w
+                    (Images Only)</a>
+            </li>
+            @endforeach
+        </ul>
     </div>
-@endif --}}
-    <h1 class="pull-right" style="margin-bottom: 5px;">
-        <div class="dropdown" style="display: inline-block">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-download"></i> Download Zip
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="{{route('files.downloadZip',['dir'=>'all','id'=>$document->id])}}">All</a>
-                </li>
-                <li>
-                    <a href="{{route('files.downloadZip',['dir'=>'original','id'=>$document->id])}}">Original</a>
-                </li>
-                @foreach (explode(",",config('settings.image_files_resize')) as $varient)
-                <li>
-                    <a href="{{route('files.downloadZip',['dir'=>$varient,'id'=>$document->id])}}">{{$varient}}w
-                        (Images Only)</a>
-                </li>
-                @endforeach
-            </ul>
-        </div>
-        @can('edit', $document)
-        <a href="{{route('documents.edit', $document->id)}}" class="btn btn-primary"><i class="fa fa-edit"></i>
-            Edit</a>
-        @endcan
-        @can('delete', $document)
-        {!! Form::open(['route' => ['documents.destroy', $document->id], 'method' => 'delete', 'style'=>'display:inline;']) !!}
-        <button class="btn btn-danger" onclick="conformDel(this,event)" type="submit"><i class="fa fa-trash"></i>
-            Delete
-        </button>
-        {!! Form::close() !!}
-        @endcan
-    </h1>
+    @can('edit', $document)
+    <a href="{{route('documents.edit', $document->id)}}" class="btn btn-primary"><i class="fa fa-edit"></i>
+        Edit</a>
+    @endcan
+    @can('delete', $document)
+    {!! Form::open(['route' => ['documents.destroy', $document->id], 'method' => 'delete', 'style'=>'display:inline;']) !!}
+    <button class="btn btn-danger" onclick="conformDel(this,event)" type="submit"><i class="fa fa-trash"></i>
+        Delete
+    </button>
+    {!! Form::close() !!}
+    @endcan
+</h1>
 </section>
+
 <div class="content">
     <div class="clearfix"></div>
 
@@ -445,7 +441,7 @@
 
     <div class="clearfix"></div>
     <div class="row">
-        <div class="col-sm-3">
+        {{-- <div class="col-sm-3">
             <div class="box box-primary">
                 <div class="box-body">
                     <div class="form-group">
@@ -497,8 +493,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-9">
+        </div> --}}
+        <div class="col-sm-12">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_files" data-toggle="tab" aria-expanded="true">{{ucfirst(config('settings.file_label_plural'))}}</a>
@@ -529,13 +525,85 @@
                         </div>
                         @endif
                         <div class="row">
+                            
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div>
+                @include("files.index")
+                {{-- @can('update', [$document, $document->tags->pluck('id')])
+                <a href="{{route('documents.files.create',$document->id)}}" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i>
+                    Add {{ucfirst(config('settings.file_label_plural'))}}</a>
+                @endcan --}}
+            </div>
+   
+            <table class="table">
+                <thead>
+                    <tr>
+                       
+                        <th scope="col">Name</th>
+                        <th scope="col">File Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
                             @foreach ($files->sortBy('file_type_id') as $file)
                             <?php 
 $rate_count_plunk = App\Review::where('file_id','=',$file->id)->pluck('rate_count');
 $rate_count_avg = $rate_count_plunk->avg();
 $no_of_reviews = $rate_count_plunk->count();
 ?>
-                            <div class="col-xs-6 col-md-6 col-lg-4">
+             <tr>
+                <th scope="row" onclick="showFileModal({{json_encode($file)}})"><i
+                    class="fa fa-file-text" style=" color: #3c8dbc; margin-right: 10px"></i>{{$file->name}}.{{last(explode('.', $file->file))}}</th>
+                
+                <td>{{$file->fileType->name}}</td>
+                <td>{{$file->status}}</td>
+                @if($no_of_reviews ==0)         
+                    <td><label for="star5" title="text">Not Rated Yet</label>  </td>       
+                @else
+                    <td><label for="star5" title="text">{{round($rate_count_avg,1)}} ★</label> <span class="no_of_reviews">({{$no_of_reviews}})</span></td>
+            @endif
+            <td>
+                <div class="pull-right box-tools">
+                    <button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="    background: transparent;border: none;">
+                        <i class="fa fa-ellipsis-v" style="color: #000;"></i>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" style="top: auto; bottom:auto">
+                        <li><a href="javascript:void(0);" onclick="showFileModal({{json_encode($file)}})">Show 
+                                Detail</a></li>
+                        <li><a href="javascript:void(0);" onclick="showFileRateModal({{json_encode($file)}})">Rate ✩</a></li>
+                        <li>
+                            <a href="{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}?force=true" download>Download
+                                original</a>
+                        </li>
+
+                        @if (checkIsFileIsImage($file->file))
+                        @foreach (explode(",",config('settings.image_files_resize')) as $varient)
+                        <li>
+                            <a href="{{route('files.showfile',['dir'=>$varient,'file'=>$file->file])}}?force=true" download>Download {{$varient}}w</a>
+                        </li>
+                        @endforeach
+                        <li>
+                            <a href="javascript:void(0)" onclick="javascript:ImageEditor.open('{{route('files.showfile',['dir'=>'original','file'=>$file->file])}}')">
+                                Edit Image
+                            </a>
+                        </li>
+                        @endif
+                        <li>
+                            {!! Form::open(['route' => ['documents.files.destroy', $file->id], 'method' => 'delete', 'style'=>'display:inline;']) !!}
+                            <button class="btn btn-link" onclick="conformDel(this,event)" type="submit">
+                                Delete
+                            </button>
+                            {!! Form::close() !!}
+                        </li>
+                    </ul>
+                </div>
+            </td>
+            </tr>
+                            {{-- <div class="col-xs-6 col-md-6 col-lg-4">
                                 <div class="box custom-box">
                                     <div class="box-body">
                                         @if (checkIsFileIsImage($file->file)) 
@@ -555,9 +623,9 @@ $no_of_reviews = $rate_count_plunk->count();
                                             <div class="star">
                                                 @if($no_of_reviews ==0)         
                                                 <label for="star5" title="text">Not Rated Yet</label>         
-@else
-<label for="star5" title="text">{{round($rate_count_avg,1)}} ★</label> <span class="no_of_reviews">({{$no_of_reviews}})</span>
-@endif
+                                                @else
+                                                <label for="star5" title="text">{{round($rate_count_avg,1)}} ★</label> <span class="no_of_reviews">({{$no_of_reviews}})</span>
+                                                @endif
 
                                             </div>
                                         </div>
@@ -598,13 +666,16 @@ $no_of_reviews = $rate_count_plunk->count();
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             @endforeach
+                        </tbody>
+                    </table>
+                </div>
                         </div>
-                        @can('update', [$document, $document->tags->pluck('id')])
+                        {{-- @can('update', [$document, $document->tags->pluck('id')])
                         <a href="{{route('documents.files.create',$document->id)}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>
                             Add {{ucfirst(config('settings.file_label_plural'))}}</a>
-                        @endcan
+                        @endcan --}}
                     </div>
                     @can('verify', $document)
                     <div class="tab-pane" id="tab_verification">
@@ -804,11 +875,12 @@ $no_of_reviews = $rate_count_plunk->count();
                     @endcan
                 </div>
             </div>
+    
         </div>
 
     </div>
 </div>
-<div id="sticky_footer">
+{{-- <div id="sticky_footer">
     <form id="frm_image2pdf" action="{{route('files.downloadPdf')}}" method="post" style="display: inline">
         @csrf
         <input type="hidden" name="images">
@@ -824,5 +896,5 @@ $no_of_reviews = $rate_count_plunk->count();
             </ul>
         </div>
     </form>
-</div>
+</div> --}}
 @endsection
